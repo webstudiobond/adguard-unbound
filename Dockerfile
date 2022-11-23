@@ -1,8 +1,8 @@
-FROM alpine:3.16
+FROM alpine:3.17
 
 RUN apk add --no-cache \
         libcap \
-        unbound=1.15.0-r0
+        unbound=1.17.0-r0
 
 WORKDIR /tmp
 
@@ -11,7 +11,7 @@ RUN wget https://www.internic.net/domain/named.root -qO- >> /etc/unbound/root.hi
 COPY files/ /opt/
 
 # AdGuardHome
-RUN wget https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.107.18/AdGuardHome_linux_amd64.tar.gz >/dev/null 2>&1 \
+RUN wget https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.107.19/AdGuardHome_linux_amd64.tar.gz >/dev/null 2>&1 \
         && mkdir -p /opt/adguardhome/conf /opt/adguardhome/work \
         && tar xf AdGuardHome_linux_amd64.tar.gz ./AdGuardHome/AdGuardHome  --strip-components=2 -C /opt/adguardhome \
         && /bin/ash /opt/adguardhome \
