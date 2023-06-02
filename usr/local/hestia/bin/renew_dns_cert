@@ -1,0 +1,44 @@
+# /bin/sh
+# don't forget to change example.com to your domain
+sudo docker run -it --rm \
+ --name certbot \
+ -v "/home/dns/ssl:/etc/letsencrypt" \
+ -v "/home/dns/cloudflare.ini:/cloudflare.ini" \
+ certbot/dns-cloudflare renew --preferred-chain "ISRG Root X1" --dns-cloudflare --dns-cloudflare-credentials /cloudflare.ini
+
+nginx_restart=false
+
+# dns.example.com
+# certbot
+dns_certbot_pem=/home/dns/ssl/live/dns.example.com/fullchain.pem
+dns_certbot_key=/home/dns/ssl/live/dns.example.com/privkey.pem
+dns_certbot_ca=/home/dns/ssl/live/dns.example.com/chain.pem
+dns_certbot_crt=/home/dns/ssl/live/dns.example.com/cert.pem
+# nginx
+mkdir -p /home/dns/nginx/dns.example.com
+dns_nginx_pem=/home/dns/nginx/dns.example.com/fullchain.pem
+dns_nginx_key=/home/dns/nginx/dns.example.com/privkey.pem
+dns_nginx_ca=/home/dns/nginx/dns.example.com/chain.pem
+dns_nginx_crt=/home/dns/nginx/dns.example.com/cert.pem
+
+if ! ls /home/dns/nginx/dns.example.com/*.pem > /dev/null 2>&1 || [ "$dns_certbot_pem" -nt "$dns_nginx_pem"  ]
+then
+     printf '%s\n' "Updating certificate..."
+     cp $dns_certbot_pem $dns_nginx_pem
+     cp $dns_certbot_key $dns_nginx_key
+     cp $dns_certbot_ca $dns_nginx_ca
+     cp $dns_certbot_crt $dns_nginx_crt
+     nginx_restart=true
+else
+     printf '%s\n' "Certificate dns.example.com is already up-to-date."
+fi
+
+chown -R dns:dns /home/dns/ssl
+chown -R dns:dns /home/dns/nginx
+
+if $nginx_restart
+then
+    printf '%s\n' "Reloading nginx..."
+    nginx -t  > /dev/null 2>&1 && service nginx restart
+    printf '%s\n' "Done!"
+fi
