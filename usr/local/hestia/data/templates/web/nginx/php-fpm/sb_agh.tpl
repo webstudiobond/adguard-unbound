@@ -22,8 +22,7 @@ server {
 }
 
 server {
-    listen      %ip%:%web_ssl_port% quic reuseport;
-    listen      %ip%:%web_ssl_port% ssl;
+    listen      %ip%:%web_ssl_port% ssl http2;
     # include ipv6
     include %home%/%user%/web/%domain%/public_html/sipv6[.]conf;
     server_name %domain_idn% *.%domain_idn%;
