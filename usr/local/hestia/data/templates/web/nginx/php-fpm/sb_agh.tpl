@@ -22,7 +22,8 @@ server {
 }
 
 server {
-    listen      %ip%:%web_ssl_port% ssl http2;
+    listen      %ip%:%web_ssl_port% quic reuseport;
+    listen      %ip%:%web_ssl_port% ssl;
     # include ipv6
     include %home%/%user%/web/%domain%/public_html/sipv6[.]conf;
     server_name %domain_idn% *.%domain_idn%;
@@ -82,6 +83,17 @@ server {
     location /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;
+    }
+
+    location /dns-query {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_redirect off;
+        proxy_buffering on;
+        proxy_http_version 1.1;
+        proxy_read_timeout     6s;
+        proxy_connect_timeout  6s;
+        proxy_pass https://%domain%:5443/dns-query;
     }
 
     proxy_hide_header Upgrade;
