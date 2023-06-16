@@ -76,7 +76,7 @@ nano /usr/local/hestia/bin/renew_dns_cert
 chmod +x /usr/local/hestia/bin/renew_dns_cert
 ```
 - Then add to cron this command `sudo /usr/local/hestia/bin/renew_cert` in hestia cp for user `admin` (for example for every 30 days)
-6) Put files [`sb_agh.stpl`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.stpl) and [`sb_agh.stpl`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.tpl) in a folder `/usr/local/hestia/data/templates/web/nginx/php-fpm/`. Then change template for your domain in hestia cp (don't forget to change `example.com` for your domain)
+6) Put files [`sb_agh.stpl`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.stpl) and [`sb_agh.tpl`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.tpl) in a folder `/usr/local/hestia/data/templates/web/nginx/php-fpm/`. Then change template for your domain in hestia cp (don't forget to change `example.com` for your domain)
 ```
 v-change-web-domain-tpl dns dns.example.com sb_agh
 ```
