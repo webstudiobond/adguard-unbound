@@ -5,8 +5,8 @@ combine these two programs as seperate containers. The only way I found was usin
 reliable enough.
 
 **Base**: alpine:3.19 \
-**Unbound**: 1.19.0-r0 \
-**AdGuard Home**: v0.107.45
+**Unbound**: 1.19.3-r0 \
+**AdGuard Home**: v0.107.46
 
 Use the same volumemappings as the original AdGuardHome container. In fact, you can just swap in this image and everything still works. You only have to update your Upstream DNS server to __127.0.0.1:5053__, which enables Unbound.
 
