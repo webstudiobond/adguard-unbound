@@ -6,7 +6,7 @@ reliable enough.
 
 **Base**: alpine:3.20 \
 **Unbound**: 1.20.0-r0 \
-**AdGuard Home**: v0.107.51
+**AdGuard Home**: v0.107.52
 
 Use the same volumemappings as the original AdGuardHome container. In fact, you can just swap in this image and everything still works. You only have to update your Upstream DNS server to __127.0.0.1:5053__, which enables Unbound.
 
