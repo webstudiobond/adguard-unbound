@@ -70,28 +70,28 @@ sudo docker run -it --rm \
  --no-eff-email --dns-cloudflare-propagation-seconds 20 \
  --cert-name example.com -d *.dns.example.com -d dns.example.com
 ```
-- Add [`renew_dns_cert`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/bin/renew_dns_cert) to `/usr/local/hestia/bin` and make it executable (don't forget to change example.com to your domain)
+- Add [`renew_dns_cert`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/usr/local/hestia/bin/renew_dns_cert) to `/usr/local/hestia/bin` and make it executable (don't forget to change example.com to your domain)
 ```
 nano /usr/local/hestia/bin/renew_dns_cert
 chmod +x /usr/local/hestia/bin/renew_dns_cert
 ```
 - Then add to cron this command `sudo /usr/local/hestia/bin/renew_cert` in hestia cp for user `admin` (for example for every 30 days)
-6) Put files [`sb_agh.stpl`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.stpl) and [`sb_agh.tpl`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.tpl) in a folder `/usr/local/hestia/data/templates/web/nginx/php-fpm/`. Then change template for your domain in hestia cp (don't forget to change `example.com` for your domain)
+6) Put files [`sb_agh.stpl`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.stpl) and [`sb_agh.tpl`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/usr/local/hestia/data/templates/web/nginx/php-fpm/sb_agh.tpl) in a folder `/usr/local/hestia/data/templates/web/nginx/php-fpm/`. Then change template for your domain in hestia cp (don't forget to change `example.com` for your domain)
 ```
 v-change-web-domain-tpl dns dns.example.com sb_agh
 ```
 7) If you wish build your own docker image
 ```
 cd /home/dns/docker
-git clone https://github.com/seb81/adguard-unbound
+git clone https://github.com/webstudiobond/adguard-unbound
 cd /home/dns/docker/adguard-unbound
 docker build --tag sb/adguard-unbound .
 ```
-8) Create [`docker-compose.yaml`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/docker-compose.yaml)
+8) Create [`docker-compose.yaml`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/docker-compose.yaml)
 ```
 nano /home/dns/docker/agh-unbound/docker-compose.yaml
 ```
-9) Create [`unbound.conf`](https://raw.githubusercontent.com/seb81/adguard-unbound/master/files/unbound/unbound.conf)
+9) Create [`unbound.conf`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/files/unbound/unbound.conf)
 ```
 nano /home/dns/docker/agh-unbound/conf/unbound/unbound.conf
 ```
