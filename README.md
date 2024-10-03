@@ -19,7 +19,7 @@ For Unbound: \
 /opt/unbound (Needs unbound.conf)
 
 **Ports:**
-53/tcp 53/udp 67/udp 68/udp 80/tcp 443/tcp 853/tcp 853/udp 3000/tcp 5053/tcp 5053/udp
+53/tcp 53/udp 67/udp 68/udp 80/tcp 443/tcp 443/udp 3000/tcp 853/tcp 853/udp 5443/tcp 5443/udp 6060/tcp 5053/tcp 5053/udp
 
 ## hestia cp, certbot with cloudflare, docker compose adguard home + unbound
 ### Steps:
