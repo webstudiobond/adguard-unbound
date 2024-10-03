@@ -92,7 +92,7 @@ server {
         proxy_http_version 1.1;
         proxy_read_timeout     6s;
         proxy_connect_timeout  6s;
-        proxy_pass https://%domain%:5443/dns-query;
+        proxy_pass https://%domain%:6443/dns-query;
     }
 
     proxy_hide_header Upgrade;
