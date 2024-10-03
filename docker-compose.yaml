@@ -45,7 +45,7 @@ services:
       # not required as it is already present in the image
       # - /usr/share/dns:/usr/share/dns
       # ssl certificates for domain and subdomain
-      - /home/dns/nginx/dns.example.com:/cert
+      - ./nginx/dns.example.com:/cert
     environment:
       - TZ=Europe/Kyiv
     deploy:
