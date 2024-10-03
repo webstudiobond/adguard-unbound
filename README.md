@@ -4,9 +4,9 @@ Container combining AdGuard Home and Unbound. I don't like the fact you cannot u
 combine these two programs as seperate containers. The only way I found was using the Docker container IP address, which to me isn't 
 reliable enough.
 
-**Base**: alpine:3.20 \
-**Unbound**: 1.20.0-r0 \
-**AdGuard Home**: v0.107.52
+**Base**: alpine:latest \
+**Unbound**: latest from alpine:latest \
+**AdGuard Home**: v0.107.53
 
 Use the same volumemappings as the original AdGuardHome container. In fact, you can just swap in this image and everything still works. You only have to update your Upstream DNS server to __127.0.0.1:5053__, which enables Unbound.
 
@@ -23,14 +23,15 @@ For Unbound: \
 
 ## hestia cp, certbot with cloudflare, docker compose adguard home + unbound
 ### Steps:
-1) Install DNSSEC key and root hints
+1) Install DNSSEC key and root hints (not required as it is already present in the image)
 ```
 sudo apt update && sudo apt install dns-root-data
 ```
 2) for QUIC
 ```
 cat << EOF >> /etc/sysctl.conf
-net.core.rmem_max=2500000
+net.core.rmem_max = 7500000
+net.core.wmem_max = 7500000
 EOF
 sysctl -p
 ```
@@ -41,11 +42,8 @@ v-add-domain dns dns.example.com
 ```
 4) Create folders
 ```
-mkdir -p /home/dns/{docker,nginx,ssl}
-mkdir -p /home/dns/docker/agh-unbound/{work,conf}
-mkdir -p /home/dns/docker/agh-unbound/conf/{agh,unbound}
-chown -R dns:dns /home/dns/{docker,nginx,ssl,web} && \
-find /home/dns/web -type d -name 'public_html' -exec chown dns:www-data {} \;
+mkdir -p /home/dns/{agh-conf,unbound-conf,work,nginx,ssl}
+chown -R dns:dns /home/dns/{agh-conf,unbound-conf,cert,work}
 ```
 5) Use certbot for generating certificate
 - Add dns records in cloudflare [dashboard](https://dash.cloudflare.com): `A` and `AAAA` for `dns.example.com`, `CNAME` for `*.dns.example.com` and don't forget to change `example.com` to your domain
@@ -82,18 +80,17 @@ v-change-web-domain-tpl dns dns.example.com sb_agh
 ```
 7) If you wish build your own docker image
 ```
-cd /home/dns/docker
+cd /home/dns/
 git clone https://github.com/webstudiobond/adguard-unbound
-cd /home/dns/docker/adguard-unbound
-docker build --tag sb/adguard-unbound .
+build --tag sb/adguard-unbound:latest /home/dns/adguard-unbound
 ```
 8) Create [`docker-compose.yaml`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/docker-compose.yaml)
 ```
-nano /home/dns/docker/agh-unbound/docker-compose.yaml
+nano /home/dns/docker-compose.yaml
 ```
 9) Create [`unbound.conf`](https://raw.githubusercontent.com/webstudiobond/adguard-unbound/master/files/unbound/unbound.conf)
 ```
-nano /home/dns/docker/agh-unbound/conf/unbound/unbound.conf
+nano /home/dns/unbound-conf/unbound.conf
 ```
 10) Start and use wiki for configure [Adguard Home](https://github.com/AdguardTeam/AdGuardHome/wiki)
 
@@ -101,10 +98,10 @@ nano /home/dns/docker/agh-unbound/conf/unbound/unbound.conf
 ```
 # create and start
 docker compose \
- -f /home/dns/docker/agh-unbound/docker-compose.yaml up -d
+ -f /home/dns/docker-compose.yaml up -d
 # stop and remove
 docker compose \
- -f /home/dns/docker/agh-unbound/docker-compose.yaml down
+ -f /home/dns/docker-compose.yaml down
 ```
 
 
