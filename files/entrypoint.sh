@@ -1,4 +1,7 @@
-#!/bin/ash
+#!/bin/sh
+
+# generate/update trusted root anchor file
+unbound-anchor -v -a /usr/share/dns/root.key
 
 unbound -c /opt/unbound/unbound.conf
 status=$?
