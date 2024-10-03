@@ -43,7 +43,7 @@ v-add-domain dns dns.example.com
 4) Create folders
 ```
 mkdir -p /home/dns/{agh-conf,unbound-conf,work,nginx,ssl}
-chown -R dns:dns /home/dns/{agh-conf,unbound-conf,cert,work}
+chown -R dns:dns /home/dns/{agh-conf,unbound-conf,work,nginx,ssl}
 ```
 5) Use certbot for generating certificate
 - Add dns records in cloudflare [dashboard](https://dash.cloudflare.com): `A` and `AAAA` for `dns.example.com`, `CNAME` for `*.dns.example.com` and don't forget to change `example.com` to your domain
