@@ -1,15 +1,12 @@
-version: "3"
+name: adguardhome
 
 services:
-  adguardhome-unbound:
-    container_name: adguard-unbound
-    hostname: agh-unbound
+  agh:
+    container_name: agh
+    hostname: agh
     image: sb/adguard-unbound
-    network_mode: "bridge"
     restart: unless-stopped
     ports:
-      # disable this port after first setup
-      - 3000:3000/tcp
       # plain DNS
       # - 6553:53/tcp
       # - 6553:53/udp
@@ -19,29 +16,55 @@ services:
       # - 68:68/udp
       # add if you are going to use AdGuard Home's admin panel as well as run AdGuard Home as an HTTPS/DNS-over-HTTPS server
       # - 8002:80/tcp
-      # change this port for security reason to use AdGuard Home's admin panel
-      - 5443:5443/tcp
-      - 5443:5443/udp
+      - 6443:443/tcp
+      - 6443:443/udp
+      # disable after first setup
+      # - 3000:3000/tcp
       # add if you are going to run AdGuard Home as a DNS-over-TLS server
       - 853:853/tcp
       # add if you are going to run AdGuard Home as a DNS-over-QUIC server.
       - 853:853/udp
       # add if you are going to enable unbound access on local server
-      #- 5035:5035/tcp
-      #- 5035:5035/udp
+      #- 5053:5053/tcp
+      #- 5053:5053/udp
+      # add if you are going to run AdGuard Home as a DNSCrypt server.
+      #- 5443:5443/tcp
+      #- 5443:5443/udp
+      # debugging profiles
+      #- 6060:6060/tcp
+
     # Volumes store your data between container upgrades
     volumes:
       # adguardhome container work directory
       - ./work:/opt/adguardhome/work
       # adguardhome container conf directory
-      - ./conf/agh:/opt/adguardhome/conf
-      # ssl certificates for domain and subdomain, don't forget to change example.com to your domain
-      - /home/dns/nginx/dns.example.com:/cert
+      - ./agh-conf:/opt/adguardhome/conf
       # unbound dir with custom config
-      - ./conf/unbound:/opt/unbound
+      - ./unbound-conf:/opt/unbound
       # DNSSEC key and root hints from dns-root-data package
-      - /usr/share/dns:/usr/share/dns
+      # not required as it is already present in the image
+      # - /usr/share/dns:/usr/share/dns
+      # ssl certificates for domain and subdomain
+      - /home/dns/nginx/dns.example.com:/cert
     environment:
-      - TZ=Europe/Kiev
-      - UID=1001
-      - GID=1001
+      - TZ=Europe/Kyiv
+    deploy:
+      resources:
+        limits:
+          # Number of CPU threads
+          cpus: '2.00'
+          # Gigabytes of memory
+          memory: '4G'
+    # You only need to leave one: or network_mode: or networks:
+    network_mode: "bridge"
+#     networks:
+#       dns:
+#         ipv4_address: 10.10.4.2
+
+# networks:
+#     dns:
+#         driver: bridge
+#         ipam:
+#           config:
+#             - subnet: 10.10.4.0/16
+#               gateway: 10.10.4.1
